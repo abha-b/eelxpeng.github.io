@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html>
-
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: {
+        equationNumbers: {
+          autoNumber: "AMS"
+        }
+      },
+      tex2jax: {
+        inlineMath: [ ['$','$']],
+        displayMath: [ ['$$','$$'] ],
+        processEscapes: true,
+      }
+    });
+  </script>
+  <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
   <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -62,9 +78,249 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p>After learned variational inference and latent dirichlet allocation (LDA), I wrote a paper about Gaussian relational topic model to solve the problem of connection discovery using shared images [to be announced]. In order to continue solve more challenging problems and improving myself, I find it necessary to master Markov Chain Monte Carlo methods. Therefore, I put my hands on Gibbs sampling and Metropolis Hastings algorithm.</p>
+    <p>After learned variational inference and latent dirichlet allocation (LDA), I wrote a paper about Gaussian relational topic model to solve the problem of connection discovery using shared images [to be announced]. In order to continue solving more challenging problems and improving myself, I find it necessary to master Markov Chain Monte Carlo methods. Therefore, I put my hands on Gibbs sampling and Metropolis Hastings algorithm.</p>
 
-<p>Check out the <a href="http://jekyllrb.com/docs/home">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a href="https://github.com/jekyll/jekyll">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a href="https://talk.jekyllrb.com/">Jekyll Talk</a>.</p>
+<h1 id="metroplis-hastings-and-slice-sampling">Metroplis Hastings and Slice Sampling</h1>
+
+<p>As an experiment of Metroplis Hastings algorithm, I find <a href="http://isaacslavitt.com/2013/12/30/metropolis-hastings-and-slice-sampling/">this link</a> useful. It also compares Metropolis Hastings with slice sampling, both are worth investigating. Following experiments are based on the post.</p>
+
+<p>Anyway, first let’s describe the model we are going to MCMC with. It’s a two level hierachical model:</p>
+
+<script type="math/tex; mode=display">v \sim \mathcal{N}(v|0,3^2)\\
+x_k|v \sim \mathcal{N}(x_k|0,e^v) \ \text{for} \  k=0,1,...,9</script>
+
+<p>The joint distribution is obviously given by</p>
+
+<script type="math/tex; mode=display">p(v,x_1,x_2,...,x_9) = \mathcal{N}(v|0,3^2) \prod_{k=1}^{9} \mathcal{N}(x_k|0,e^v)</script>
+
+<p>The class defining the distribution for sampling and probability density evaluation is given:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="kn">as</span> <span class="nn">ss</span>
+
+
+<span class="k">class</span> <span class="nc">joint_dist</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="s">""" sample a random variable from this distribution """</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="c"># generate rvs</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">()</span>
+            <span class="n">xs</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="o">**</span><span class="n">v</span><span class="p">))</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+            <span class="c"># place in sample array</span>
+            <span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="n">sample</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">xs</span>
+
+        <span class="k">return</span> <span class="n">sample</span>
+
+    <span class="k">def</span> <span class="nf">pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
+        <span class="s">""" get the probability of a specific sample """</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">pv</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">pxs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ss</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="o">**</span><span class="n">v</span><span class="p">))</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x_k</span><span class="p">)</span> <span class="k">for</span> <span class="n">x_k</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pv</span><span class="p">]</span> <span class="o">+</span> <span class="n">pxs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">loglike</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
+        <span class="s">""" log likelihood of a specific sample """</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">sample</span><span class="p">)))</span>
+</code></pre>
+</div>
+
+<p>The current state is defined as $w=[v,x_1,x_2,…,x_9]$. And the proposal funciton is defined as symmetric normal distribution with the current state as mean:</p>
+
+<script type="math/tex; mode=display">q(w'|w)=\mathcal{N}(w,\mathbf{1}_{10})</script>
+
+<p>The Metropolis-Hasting function is defined:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">metropolis</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">iters</span><span class="p">):</span>
+    <span class="s">"""
+    based on http://www.cs.toronto.edu/~asamir/cifar/rpa-tutorial.pdf
+    
+    can take several minutes to run with large sample sizes.
+    """</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">joint_dist</span><span class="p">()</span>
+
+    <span class="c"># set up empty sample holder</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">D</span><span class="p">,</span> <span class="n">iters</span><span class="p">))</span>
+
+    <span class="c"># initialize state and log-likelihood</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">Lp_state</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">loglike</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+    <span class="n">accepts</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">iters</span><span class="p">):</span>
+        
+        <span class="c"># propose a new state</span>
+        <span class="n">prop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">Lp_prop</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">loglike</span><span class="p">(</span><span class="n">prop</span><span class="p">)</span>
+        <span class="n">rand</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">rand</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">Lp_prop</span> <span class="o">-</span> <span class="n">Lp_state</span><span class="p">):</span>
+            <span class="n">accepts</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">Lp_state</span> <span class="o">=</span> <span class="n">Lp_prop</span>
+
+        <span class="n">samples</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">print</span><span class="p">(</span><span class="s">'[#iter: </span><span class="si">%</span><span class="s">d]'</span> <span class="o">%</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">print</span> <span class="s">'Acceptance ratio'</span><span class="p">,</span> <span class="n">accepts</span><span class="o">/</span><span class="n">iters</span>
+    <span class="k">return</span> <span class="n">samples</span>
+</code></pre>
+</div>
+
+<p>Let’s start by taking 50,000 samples using Metropolis-Hastings.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># define our starting point</span>
+<span class="n">w_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+
+<span class="c"># actually do the sampling</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">50000</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">metropolis</span><span class="p">(</span><span class="n">w_0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Acceptance ratio 0.24342
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>  
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
+<span class="n">rcParams</span><span class="p">[</span><span class="s">'font.size'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">rcParams</span><span class="p">[</span><span class="s">'figure.figsize'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+
+<span class="n">burnin</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="n">burnin</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">burnin</span><span class="p">:]</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax0</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
+<span class="c">#fig, (ax0, ax1) = plt.subplots(2, 1)</span>
+
+<span class="c"># show values of sampled v by iteration</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">v</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'iteration number'</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'value of sampled v'</span><span class="p">)</span>
+
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+<span class="c"># plot a histogram of values of v</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'values of sampled v'</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'observations'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p><img src="https://http://eelxpeng.github.io/_images/2016-08-08-MH_7_0.png" alt="png" /></p>
+
+<p>As it should be noticed that the sampled $v$ is not Gaussian distributed, rather skewed. However, we know that $v$ is in fact zero-mean gaussian distributed. The skewed sampling is not good to estimate the true distribution of $v$. As discussed in the original post, it is because under the directed regime — any small or negative $v$ implies that every $x_k∼\mathcal{N}(0,e^v \approx 0)$, thus imposing a huge probability “penalty” on any non-zero $x_k$. Meanwhile, our Metropolis-Hastings is naively proposing a vector of $x_k$s which are probably not all zero, so we tend to reject any small or negative $v$.</p>
+
+<p>So for slice sampling:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">slice_sample</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">iters</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">step_out</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="s">"""
+    based on http://homepages.inf.ed.ac.uk/imurray2/teaching/09mlss/
+    sigma is the step size of each coordinate
+    """</span>
+
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">joint_dist</span><span class="p">()</span>
+
+    <span class="c"># set up empty sample holder</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">D</span><span class="p">,</span> <span class="n">iters</span><span class="p">))</span>
+
+    <span class="c"># initialize</span>
+    <span class="n">xx</span> <span class="o">=</span> <span class="n">init</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">iters</span><span class="p">):</span>
+        <span class="n">perm</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">perm</span><span class="p">)</span>
+        <span class="n">last_llh</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">loglike</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+
+        <span class="c"># Sweep through axes (simplest thing)</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">perm</span><span class="p">:</span>
+            <span class="c"># u|x ~ [0,1]*p(x)</span>
+            <span class="n">llh0</span> <span class="o">=</span> <span class="n">last_llh</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span>
+            
+            <span class="c"># Create a horizontal interval (x_l, x_r) enclosing xx</span>
+            <span class="n">rr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">x_l</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">x_l</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_l</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">-</span> <span class="n">rr</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">[</span><span class="n">d</span><span class="p">]</span>
+            <span class="n">x_r</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">x_r</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_r</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">rr</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma</span><span class="p">[</span><span class="n">d</span><span class="p">]</span>
+
+            <span class="c"># step out p(x)&gt;u'</span>
+            <span class="k">if</span> <span class="n">step_out</span><span class="p">:</span>
+                <span class="n">llh_l</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">loglike</span><span class="p">(</span><span class="n">x_l</span><span class="p">)</span>
+                <span class="k">while</span> <span class="n">llh_l</span> <span class="o">&gt;</span> <span class="n">llh0</span><span class="p">:</span>
+                    <span class="n">x_l</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_l</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">-</span> <span class="n">sigma</span><span class="p">[</span><span class="n">d</span><span class="p">]</span>
+                    <span class="n">llh_l</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">loglike</span><span class="p">(</span><span class="n">x_l</span><span class="p">)</span>
+                <span class="n">llh_r</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">loglike</span><span class="p">(</span><span class="n">x_r</span><span class="p">)</span>
+                <span class="k">while</span> <span class="n">llh_r</span> <span class="o">&gt;</span> <span class="n">llh0</span><span class="p">:</span>
+                    <span class="n">x_r</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_r</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">+</span> <span class="n">sigma</span><span class="p">[</span><span class="n">d</span><span class="p">]</span>
+                    <span class="n">llh_r</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">loglike</span><span class="p">(</span><span class="n">x_r</span><span class="p">)</span>
+
+            <span class="n">x_cur</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+                <span class="n">xd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_r</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_l</span><span class="p">[</span><span class="n">d</span><span class="p">])</span> <span class="o">+</span> <span class="n">x_l</span><span class="p">[</span><span class="n">d</span><span class="p">]</span>
+                <span class="n">x_cur</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">xd</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">last_llh</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">loglike</span><span class="p">(</span><span class="n">x_cur</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">last_llh</span> <span class="o">&gt;</span> <span class="n">llh0</span><span class="p">:</span> <span class="c">#this is the only way to leave the while loop, satiesfy p(x)&gt;u'</span>
+                    <span class="n">xx</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">xd</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="k">break</span>
+                <span class="k">elif</span> <span class="n">xd</span> <span class="o">&gt;</span> <span class="n">xx</span><span class="p">[</span><span class="n">d</span><span class="p">]:</span>
+                    <span class="n">x_r</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">xd</span>
+                <span class="k">elif</span> <span class="n">xd</span> <span class="o">&lt;</span> <span class="n">xx</span><span class="p">[</span><span class="n">d</span><span class="p">]:</span>
+                    <span class="n">x_l</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">xd</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="nb">RuntimeError</span><span class="p">(</span><span class="s">'Slice sampler shrank too far.'</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">1000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">print</span> <span class="s">'iteration'</span><span class="p">,</span> <span class="n">i</span>
+
+        <span class="n">samples</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">samples</span>
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># define our starting point</span>
+<span class="n">w_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+
+<span class="c"># actually do the sampling</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">slice_sample</span><span class="p">(</span><span class="n">w_0</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">burnin</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="n">burnin</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">burnin</span><span class="p">:]</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax0</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
+<span class="c">#fig, (ax0, ax1) = plt.subplots(2, 1)</span>
+
+<span class="c"># show values of sampled v by iteration</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">v</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'iteration number'</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'value of sampled v'</span><span class="p">)</span>
+
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">212</span><span class="p">)</span>
+<span class="c"># plot a histogram of values of v</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'values of sampled v'</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'observations'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre>
+</div>
 
 
   </div>
