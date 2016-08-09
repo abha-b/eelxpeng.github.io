@@ -152,7 +152,7 @@ ax1.set_ylabel('observations')
 plt.show()
 ```
 
-
+![My helpful screenshot]({{ site.url }}/assets/2016-08-08-MH_7_0.png)
 ![png]({{ site.url }}/_images/2016-08-08-MH_7_0.png)
 
 
