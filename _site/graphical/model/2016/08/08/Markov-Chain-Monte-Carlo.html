@@ -80,6 +80,76 @@
   <div class="post-content" itemprop="articleBody">
     <p>After learned variational inference and latent dirichlet allocation (LDA), I wrote a paper about Gaussian relational topic model to solve the problem of connection discovery using shared images [to be announced]. In order to continue solving more challenging problems and improving myself, I find it necessary to master Markov Chain Monte Carlo methods. Therefore, I put my hands on Gibbs sampling and Metropolis Hastings algorithm.</p>
 
+<h1 id="gibbs-sampling-and-collapsed-gibbs-sampling">Gibbs Sampling and Collapsed Gibbs Sampling</h1>
+<p>The basic idea is to sample each variable in turn, conditioned on the values of all the other variables:</p>
+
+<script type="math/tex; mode=display">x_1^{s+1} \sim p(x_1|x_2^{s},x_3^{s}) \\
+x_2^{s+1} \sim p(x_2|x_1^{s+1},x_3^{s}) \\
+x_3^{s+1} \sim p(x_3|x_1^{s+1},x_2^{s+1}) \\</script>
+
+<p>The ideal of collapsed Gibbs sampling is to integrate out all possible model parameters analytically, such that the sampling space is minimum, dramatically decrease sampling time.
+An example of collapsed Gibbs sampling for fitting a GMM can be found in Murphy’s book, p. 844.
+The example code of collapsed Gibbs sampling solving Bayesian Gaussian mixture model can be found in <a href="https://github.com/eelxpeng/bayes_gmm">here</a>. The main logic of the collapsed Gibbs sampling is:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># Loop over iterations</span>
+<span class="k">for</span> <span class="n">i_iter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iter</span><span class="p">):</span>
+
+    <span class="c"># Loop over data items</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">N</span><span class="p">):</span>
+
+        <span class="c"># Cache some old values for possible future use</span>
+        <span class="n">k_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">assignments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">K_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">K</span>
+        <span class="n">stats_old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">cache_component_stats</span><span class="p">(</span><span class="n">k_old</span><span class="p">)</span>
+
+        <span class="c"># Remove data vector `X[i]` from its current component</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">del_item</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="c"># Compute log probability of `X[i]` belonging to each component</span>
+        <span class="c"># (24.26) in Murphy, p. 843</span>
+        <span class="n">log_prob_z</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">K_max</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
+                <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">K_max</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">counts</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="c"># (24.23) in Murphy, p. 842</span>
+        <span class="n">log_prob_z</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">K</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">log_post_pred</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="c"># Empty (unactive) components</span>
+        <span class="n">log_prob_z</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">K</span><span class="p">:]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">log_prior</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">prob_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_prob_z</span> <span class="o">-</span> <span class="n">logsumexp</span><span class="p">(</span><span class="n">log_prob_z</span><span class="p">))</span>
+
+        <span class="c"># Sample the new component assignment for `X[i]`</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">prob_z</span><span class="p">)</span>
+
+        <span class="c"># There could be several empty, unactive components at the end</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">K</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">K</span>
+        <span class="c"># print prob_z, k, prob_z[k]</span>
+
+        <span class="c"># Add data item X[i] into its component `k`</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="n">k_old</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">K</span> <span class="o">==</span> <span class="n">K_old</span><span class="p">:</span>
+            <span class="c"># Assignment same and no components have been removed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">restore_component_from_stats</span><span class="p">(</span><span class="n">k_old</span><span class="p">,</span> <span class="o">*</span><span class="n">stats_old</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">assignments</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">k_old</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># Add data item X[i] into its new component `k`</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">add_item</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+    <span class="c"># Update record</span>
+    <span class="n">record_dict</span><span class="p">[</span><span class="s">"sample_time"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">record_dict</span><span class="p">[</span><span class="s">"log_marg"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_marg</span><span class="p">())</span>
+    <span class="n">record_dict</span><span class="p">[</span><span class="s">"components"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">K</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c"># Log info</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="s">"iteration: "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i_iter</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">record_dict</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">+=</span> <span class="s">", "</span> <span class="o">+</span> <span class="n">key</span> <span class="o">+</span> <span class="s">": "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">record_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">info</span> <span class="o">+=</span> <span class="s">"."</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+</code></pre>
+</div>
+
 <h1 id="metroplis-hastings-and-slice-sampling">Metroplis Hastings and Slice Sampling</h1>
 
 <p>As an experiment of Metroplis Hastings algorithm, I find <a href="http://isaacslavitt.com/2013/12/30/metropolis-hastings-and-slice-sampling/">this link</a> useful. It also compares Metropolis Hastings with slice sampling, both are worth investigating. Following experiments are based on the post.</p>

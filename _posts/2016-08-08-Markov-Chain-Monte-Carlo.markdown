@@ -6,7 +6,77 @@ categories: graphical model
 ---
 After learned variational inference and latent dirichlet allocation (LDA), I wrote a paper about Gaussian relational topic model to solve the problem of connection discovery using shared images [to be announced]. In order to continue solving more challenging problems and improving myself, I find it necessary to master Markov Chain Monte Carlo methods. Therefore, I put my hands on Gibbs sampling and Metropolis Hastings algorithm.
 
+# Gibbs Sampling and Collapsed Gibbs Sampling
+The basic idea is to sample each variable in turn, conditioned on the values of all the other variables:
 
+$$
+x_1^{s+1} \sim p(x_1|x_2^{s},x_3^{s}) \\
+x_2^{s+1} \sim p(x_2|x_1^{s+1},x_3^{s}) \\
+x_3^{s+1} \sim p(x_3|x_1^{s+1},x_2^{s+1}) \\
+$$
+
+The ideal of collapsed Gibbs sampling is to integrate out all possible model parameters analytically, such that the sampling space is minimum, dramatically decrease sampling time.
+An example of collapsed Gibbs sampling for fitting a GMM can be found in Murphy's book, p. 844.
+The example code of collapsed Gibbs sampling solving Bayesian Gaussian mixture model can be found in [here](https://github.com/eelxpeng/bayes_gmm). The main logic of the collapsed Gibbs sampling is:
+
+```python
+# Loop over iterations
+for i_iter in range(n_iter):
+
+    # Loop over data items
+    for i in xrange(self.components.N):
+
+        # Cache some old values for possible future use
+        k_old = self.components.assignments[i]
+        K_old = self.components.K
+        stats_old = self.components.cache_component_stats(k_old)
+
+        # Remove data vector `X[i]` from its current component
+        self.components.del_item(i)
+
+        # Compute log probability of `X[i]` belonging to each component
+        # (24.26) in Murphy, p. 843
+        log_prob_z = (
+            np.ones(self.components.K_max)*np.log(
+                float(self.alpha)/self.components.K_max + self.components.counts
+                )
+            )
+        # (24.23) in Murphy, p. 842
+        log_prob_z[:self.components.K] += self.components.log_post_pred(i)
+        # Empty (unactive) components
+        log_prob_z[self.components.K:] += self.components.log_prior(i)
+        prob_z = np.exp(log_prob_z - logsumexp(log_prob_z))
+
+        # Sample the new component assignment for `X[i]`
+        k = utils.draw(prob_z)
+
+        # There could be several empty, unactive components at the end
+        if k > self.components.K:
+            k = self.components.K
+        # print prob_z, k, prob_z[k]
+
+        # Add data item X[i] into its component `k`
+        if k == k_old and self.components.K == K_old:
+            # Assignment same and no components have been removed
+            self.components.restore_component_from_stats(k_old, *stats_old)
+            self.components.assignments[i] = k_old
+        else:
+            # Add data item X[i] into its new component `k`
+            self.components.add_item(i, k)
+
+    # Update record
+    record_dict["sample_time"].append(time.time() - start_time)
+    start_time = time.time()
+    record_dict["log_marg"].append(self.log_marg())
+    record_dict["components"].append(self.components.K - 1)
+
+    # Log info
+    info = "iteration: " + str(i_iter)
+    for key in sorted(record_dict):
+        info += ", " + key + ": " + str(record_dict[key][-1])
+    info += "."
+    logger.info(info)
+```
 
 # Metroplis Hastings and Slice Sampling
 
