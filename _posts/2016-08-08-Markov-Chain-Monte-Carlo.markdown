@@ -152,8 +152,7 @@ ax1.set_ylabel('observations')
 plt.show()
 ```
 
-![My helpful screenshot]({{ site.url }}/assets/2016-08-08-MH_7_0.png)
-![png]({{ site.url }}/_images/2016-08-08-MH_7_0.png)
+![MH](image/2016-08-08-MH_7_0.png)
 
 
 As it should be noticed that the sampled $v$ is not Gaussian distributed, rather skewed. However, we know that $v$ is in fact zero-mean gaussian distributed. The skewed sampling is not good to estimate the true distribution of $v$. As discussed in the original post, it is because under the directed regime — any small or negative $v$ implies that every $x_k∼\mathcal{N}(0,e^v \approx 0)$, thus imposing a huge probability "penalty" on any non-zero $x_k$. Meanwhile, our Metropolis-Hastings is naively proposing a vector of $x_k$s which are probably not all zero, so we tend to reject any small or negative $v$.
