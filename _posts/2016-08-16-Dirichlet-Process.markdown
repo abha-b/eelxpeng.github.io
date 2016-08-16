@@ -42,3 +42,22 @@ This in fact show that a sample from Dirichlet process has point masses located 
 $$
 G = \sum_{k=1}^{\infty} \pi_k\delta_{\theta_k^*}
 $$
+
+The above predictive in fact corresponds to MacQueen urn scheme and the above infinite sum corresponds to Stick-breaking construction. And the famous Chinese Restaurant Process is in fact very similar MacQueen urn scheme except for different metaphor, both construction has rich-get-richer property. I don't want to repeat the constructions here, but refer to [Yee Whye Teh's tutorial](http://videolectures.net/mlss07_teh_dp/) if necessary.
+
+However, I do want to state the stick-breaking construction here since it would be useful for susequent Dirichlet Process Mixture Model. The stick-breaking construction separates the construction of $\pi$ and $\theta$. The construction of $\pi$ follows stick-breaking process
+
+$$
+\beta_k \sim Beta(1,\alpha)\\
+\pi_k = \beta_k \prod_{l=1}^{k-1}(1-\beta_k)
+$$ 
+
+also written as $\pi \sim GEM(\alpha)$. And the $\theta_k^*$ is sampled directly from the base distribution:
+
+$$
+\theta_k^* \sim H \\
+G = \sum_{k=1}^{\infty} \pi_k \delta_{\theta_k^*}
+$$
+
+# DP Mixture Model
+Intended to solve the $k$ selection problem for mixture model, LDA, etc, applying Dirichlet process to the problems serves to automatically select the number of mixture components or dimension of variables. Here, I'll first investigate the application to DP Mixture model.
