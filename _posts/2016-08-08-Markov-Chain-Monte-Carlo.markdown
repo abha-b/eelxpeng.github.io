@@ -2,7 +2,6 @@
 layout: post
 title:  "Markov Chain Monte Carlo"
 date:   2016-08-08 12:00:00 +0800
-categories: graphical model
 ---
 After learned variational inference and latent dirichlet allocation (LDA), I wrote a paper about Gaussian relational topic model to solve the problem of connection discovery using shared images [to be announced]. In order to continue solving more challenging problems and improving myself, I find it necessary to master Markov Chain Monte Carlo methods. Therefore, I put my hands on Gibbs sampling and Metropolis Hastings algorithm.
 
