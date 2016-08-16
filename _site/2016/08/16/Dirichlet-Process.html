@@ -109,7 +109,7 @@ P(\theta \in A | G,\theta_1,...,\theta_n) &= E[G(A)|\theta_1,...,\theta_n]\\
 
 <script type="math/tex; mode=display">G = \sum_{k=1}^{\infty} \pi_k\delta_{\theta_k^*}</script>
 
-<p>The above predictive in fact corresponds to MacQueen urn scheme and the above infinite sum corresponds to Stick-breaking construction. And the famous Chinese Restaurant Process is in fact very similar MacQueen urn scheme except for different metaphor, both construction has rich-get-richer property. I don’t want to repeat the constructions here, but refer to <a href="http://videolectures.net/mlss07_teh_dp/">Yee Whye Teh’s tutorial</a> if necessary.</p>
+<p>The above predictive in fact corresponds to MacQueen urn scheme and the above infinite sum corresponds to Stick-breaking construction. And the famous Chinese Restaurant Process is in fact very similar to MacQueen urn scheme except for different metaphor, both construction has rich-get-richer property. I don’t want to repeat the constructions here, but refer to <a href="http://videolectures.net/mlss07_teh_dp/">Yee Whye Teh’s tutorial</a> if necessary.</p>
 
 <p>However, I do want to state the stick-breaking construction here since it would be useful for susequent Dirichlet Process Mixture Model. The stick-breaking construction separates the construction of $\pi$ and $\theta$. The construction of $\pi$ follows stick-breaking process</p>
 
@@ -123,6 +123,25 @@ G = \sum_{k=1}^{\infty} \pi_k \delta_{\theta_k^*}</script>
 
 <h1 id="dp-mixture-model">DP Mixture Model</h1>
 <p>Intended to solve the $k$ selection problem for mixture model, LDA, etc, applying Dirichlet process to the problems serves to automatically select the number of mixture components or dimension of variables. Here, I’ll first investigate the application to DP Mixture model.</p>
+
+<p>We model a set of observations $\{x_1,…,x_n\}$ using a set of latent parameters $\{\theta_1,…,\theta_n\}$. Each $\theta$ is drawn independently and identically from $G$, while each $x_i$ has distribution $F(\theta_i)$ parameterized by $\theta_i$:</p>
+
+<script type="math/tex; mode=display">x_i|\theta_i \sim F(\theta_i)\\
+\theta_i|G \sim G\\
+G|\alpha,H \sim DP(\alpha,H)</script>
+
+<p>And since $G$ is discrete, multiple $\theta_i$’s can take on the same value simutaneously, therefore it can be viewed that $x_i$ with the same value of $\theta_i$ belong to the same cluster. The mixture perspective can be made more in agreement with the usual representation of mixture models using the stick-breaking construction equaivalently:</p>
+
+<script type="math/tex; mode=display">\pi|\alpha \sim GEM(\alpha)\\
+z_i|\pi \sim Multi(\pi)\\
+\theta_k^*|H \sim H\\
+x_i|z_i,\{\theta_k^*\} \sim F(\theta_{z_i}^*)</script>
+
+<p>The model is shown as follows.</p>
+
+<p><img src="/assets/2016-08-16-DPMM.png" alt="DP Mixture Model" height="300px" /></p>
+
+<p>Solving the model using collapsed Gibbs sampling turns out to be very easy, as described in Murphy’s book p.886 (Algorithm 25.1).</p>
 
   </div>
 

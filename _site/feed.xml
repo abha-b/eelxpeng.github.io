@@ -6,8 +6,8 @@
 </description>
     <link>https://http://eelxpeng.github.io/</link>
     <atom:link href="https://http://eelxpeng.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 16 Aug 2016 16:57:55 +0800</pubDate>
-    <lastBuildDate>Tue, 16 Aug 2016 16:57:55 +0800</lastBuildDate>
+    <pubDate>Tue, 16 Aug 2016 18:34:17 +0800</pubDate>
+    <lastBuildDate>Tue, 16 Aug 2016 18:34:17 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -43,7 +43,7 @@ P(\theta \in A | G,\theta_1,...,\theta_n) &amp;= E[G(A)|\theta_1,...,\theta_n]\\
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;G = \sum_{k=1}^{\infty} \pi_k\delta_{\theta_k^*}&lt;/script&gt;
 
-&lt;p&gt;The above predictive in fact corresponds to MacQueen urn scheme and the above infinite sum corresponds to Stick-breaking construction. And the famous Chinese Restaurant Process is in fact very similar MacQueen urn scheme except for different metaphor, both construction has rich-get-richer property. I don’t want to repeat the constructions here, but refer to &lt;a href=&quot;http://videolectures.net/mlss07_teh_dp/&quot;&gt;Yee Whye Teh’s tutorial&lt;/a&gt; if necessary.&lt;/p&gt;
+&lt;p&gt;The above predictive in fact corresponds to MacQueen urn scheme and the above infinite sum corresponds to Stick-breaking construction. And the famous Chinese Restaurant Process is in fact very similar to MacQueen urn scheme except for different metaphor, both construction has rich-get-richer property. I don’t want to repeat the constructions here, but refer to &lt;a href=&quot;http://videolectures.net/mlss07_teh_dp/&quot;&gt;Yee Whye Teh’s tutorial&lt;/a&gt; if necessary.&lt;/p&gt;
 
 &lt;p&gt;However, I do want to state the stick-breaking construction here since it would be useful for susequent Dirichlet Process Mixture Model. The stick-breaking construction separates the construction of $\pi$ and $\theta$. The construction of $\pi$ follows stick-breaking process&lt;/p&gt;
 
@@ -57,6 +57,25 @@ G = \sum_{k=1}^{\infty} \pi_k \delta_{\theta_k^*}&lt;/script&gt;
 
 &lt;h1 id=&quot;dp-mixture-model&quot;&gt;DP Mixture Model&lt;/h1&gt;
 &lt;p&gt;Intended to solve the $k$ selection problem for mixture model, LDA, etc, applying Dirichlet process to the problems serves to automatically select the number of mixture components or dimension of variables. Here, I’ll first investigate the application to DP Mixture model.&lt;/p&gt;
+
+&lt;p&gt;We model a set of observations $\{x_1,…,x_n\}$ using a set of latent parameters $\{\theta_1,…,\theta_n\}$. Each $\theta$ is drawn independently and identically from $G$, while each $x_i$ has distribution $F(\theta_i)$ parameterized by $\theta_i$:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x_i|\theta_i \sim F(\theta_i)\\
+\theta_i|G \sim G\\
+G|\alpha,H \sim DP(\alpha,H)&lt;/script&gt;
+
+&lt;p&gt;And since $G$ is discrete, multiple $\theta_i$’s can take on the same value simutaneously, therefore it can be viewed that $x_i$ with the same value of $\theta_i$ belong to the same cluster. The mixture perspective can be made more in agreement with the usual representation of mixture models using the stick-breaking construction equaivalently:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\pi|\alpha \sim GEM(\alpha)\\
+z_i|\pi \sim Multi(\pi)\\
+\theta_k^*|H \sim H\\
+x_i|z_i,\{\theta_k^*\} \sim F(\theta_{z_i}^*)&lt;/script&gt;
+
+&lt;p&gt;The model is shown as follows.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/2016-08-16-DPMM.png&quot; alt=&quot;DP Mixture Model&quot; height=&quot;300px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Solving the model using collapsed Gibbs sampling turns out to be very easy, as described in Murphy’s book p.886 (Algorithm 25.1).&lt;/p&gt;
 </description>
         <pubDate>Tue, 16 Aug 2016 12:00:00 +0800</pubDate>
         <link>https://http://eelxpeng.github.io/2016/08/16/Dirichlet-Process.html</link>
