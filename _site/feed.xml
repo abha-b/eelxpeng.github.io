@@ -6,9 +6,20 @@
 </description>
     <link>https://http://eelxpeng.github.io/</link>
     <atom:link href="https://http://eelxpeng.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 16 Aug 2016 18:42:21 +0800</pubDate>
-    <lastBuildDate>Tue, 16 Aug 2016 18:42:21 +0800</lastBuildDate>
+    <pubDate>Tue, 06 Sep 2016 20:32:42 +0800</pubDate>
+    <lastBuildDate>Tue, 06 Sep 2016 20:32:42 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Hamiltonian Monte Carlo and Stochastic Gradient Langevin Dynamic</title>
+        <description>
+</description>
+        <pubDate>Tue, 06 Sep 2016 12:00:00 +0800</pubDate>
+        <link>https://http://eelxpeng.github.io/2016/09/06/Hamiltonian-Monte-Carlo-and-Stochastic-Gradient-Langevin-Dynamic.html</link>
+        <guid isPermaLink="true">https://http://eelxpeng.github.io/2016/09/06/Hamiltonian-Monte-Carlo-and-Stochastic-Gradient-Langevin-Dynamic.html</guid>
+        
+        
+      </item>
     
       <item>
         <title>Dirichlet Process</title>
