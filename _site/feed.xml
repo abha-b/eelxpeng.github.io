@@ -1,25 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Bryan's research blog for Machine Learning</title>
+    <title>Xiaopeng LI</title>
     <description>As a journey towards PhD, this blog intends to record my research/project articles /activities. My research is related to Machine Learning, Artificial Intelligence, Social Media, etc.
 </description>
-    <link>https://http://eelxpeng.github.io/</link>
-    <atom:link href="https://http://eelxpeng.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 06 Sep 2016 23:23:38 +0800</pubDate>
-    <lastBuildDate>Tue, 06 Sep 2016 23:23:38 +0800</lastBuildDate>
+    <link>http://eelxpeng.github.io/</link>
+    <atom:link href="http://eelxpeng.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 09 Nov 2016 12:43:49 +0800</pubDate>
+    <lastBuildDate>Wed, 09 Nov 2016 12:43:49 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
-    
-      <item>
-        <title>Hamiltonian Monte Carlo and Stochastic Gradient Langevin Dynamic</title>
-        <description>&lt;p&gt;A perfect tutorial for introduction of Hamiltonian Monte Carlo is &lt;a href=&quot;https://theclevermachine.wordpress.com/2012/11/18/mcmc-hamiltonian-monte-carlo-a-k-a-hybrid-monte-carlo/&quot;&gt;MCMC: Hamiltonian Monte Carlo (a.k.a. Hybrid Monte Carlo)&lt;/a&gt;.&lt;/p&gt;
-</description>
-        <pubDate>Tue, 06 Sep 2016 12:00:00 +0800</pubDate>
-        <link>https://http://eelxpeng.github.io/2016/09/06/Hamiltonian-Monte-Carlo-and-Stochastic-Gradient-Langevin-Dynamic.html</link>
-        <guid isPermaLink="true">https://http://eelxpeng.github.io/2016/09/06/Hamiltonian-Monte-Carlo-and-Stochastic-Gradient-Langevin-Dynamic.html</guid>
-        
-        
-      </item>
     
       <item>
         <title>Dirichlet Process</title>
@@ -160,8 +149,8 @@ dpm.KK = KK;
 &lt;/code&gt;&lt;/pre&gt;
 </description>
         <pubDate>Tue, 16 Aug 2016 12:00:00 +0800</pubDate>
-        <link>https://http://eelxpeng.github.io/2016/08/16/Dirichlet-Process.html</link>
-        <guid isPermaLink="true">https://http://eelxpeng.github.io/2016/08/16/Dirichlet-Process.html</guid>
+        <link>http://eelxpeng.github.io/blog/2016/08/16/Dirichlet-Process</link>
+        <guid isPermaLink="true">http://eelxpeng.github.io/blog/2016/08/16/Dirichlet-Process</guid>
         
         
       </item>
@@ -484,8 +473,8 @@ x_k|v \sim \mathcal{N}(x_k|0,e^v) \ \text{for} \  k=0,1,...,9&lt;/script&gt;
 
 </description>
         <pubDate>Mon, 08 Aug 2016 12:00:00 +0800</pubDate>
-        <link>https://http://eelxpeng.github.io/2016/08/08/Markov-Chain-Monte-Carlo.html</link>
-        <guid isPermaLink="true">https://http://eelxpeng.github.io/2016/08/08/Markov-Chain-Monte-Carlo.html</guid>
+        <link>http://eelxpeng.github.io/blog/2016/08/08/Markov-Chain-Monte-Carlo</link>
+        <guid isPermaLink="true">http://eelxpeng.github.io/blog/2016/08/08/Markov-Chain-Monte-Carlo</guid>
         
         
       </item>
@@ -514,8 +503,8 @@ x_k|v \sim \mathcal{N}(x_k|0,e^v) \ \text{for} \  k=0,1,...,9&lt;/script&gt;
 
 </description>
         <pubDate>Fri, 13 May 2016 22:16:28 +0800</pubDate>
-        <link>https://http://eelxpeng.github.io/jekyll/update/2016/05/13/welcome-to-jekyll.html</link>
-        <guid isPermaLink="true">https://http://eelxpeng.github.io/jekyll/update/2016/05/13/welcome-to-jekyll.html</guid>
+        <link>http://eelxpeng.github.io/blog/2016/05/13/welcome-to-jekyll</link>
+        <guid isPermaLink="true">http://eelxpeng.github.io/blog/2016/05/13/welcome-to-jekyll</guid>
         
         
         <category>jekyll</category>

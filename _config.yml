@@ -1,22 +1,60 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely need to edit after that.
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'jekyll serve'. If you change this file, please restart the server process.
-
-# Site settings
-title: Bryan's research blog for Machine Learning
-email: xlibo@connect.ust.hk
+title: Xiaopeng LI
 description: > # this means to ignore newlines until "baseurl:"
   As a journey towards PhD, this blog intends to record my research/project articles
   /activities. My research is related to Machine Learning, Artificial Intelligence,
   Social Media, etc.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://http://eelxpeng.github.io" # the base hostname & protocol for your site
-#twitter_username: jekyllrb
-github_username:  eelxpeng
+sourcecode: "https://github.com/gchauras/much-worse-jekyll-theme"
+
+permalink: blog/:year/:month/:day/:title
+exclude: ["Makefile", "README.md"]
+
+url: "http://eelxpeng.github.io"     # the base hostname & protocol for your site
+baseurl: ""                   # the subpath of your site, e.g. /blog
+
+author:
+    name:
+    facebook:
+    scholar:
 
 # Build settings
 markdown: kramdown
+highlighter: rouge
 
+# Settings for analytics helper
+# Set 'provider' to the analytics provider you want to use.
+# Set 'provider' to false to turn analytics off globally.
+#
+analytics:
+    provider:
+    statcounter:
+        sc_project  :
+        sc_security :
+        sc_invisible: 1
+        sc_text     : 2
+    google:
+        tracking_id: ''
+    getclicky:
+      site_id:
+    mixpanel:
+        token: ''
+    piwik:
+        baseURL: '' # Piwik installation address (without protocol)
+        idsite: ''  # the id of the site on Piwik
+
+# Settings for comments helper
+# Set 'provider' to the comment provider you want to use.
+# Set 'provider' to false to turn commenting off globally.
+#
+comments:
+    provider:
+    disqus:
+      short_name:
+    livefyre:
+      site_id:
+    intensedebate:
+      account:
+    facebook:
+      appid:
+      num_posts: 5
+      width: 580
+      colorscheme: light
