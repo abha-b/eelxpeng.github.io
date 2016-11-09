@@ -18,7 +18,7 @@ The ideal of collapsed Gibbs sampling is to integrate out all possible model par
 An example of collapsed Gibbs sampling for fitting a GMM can be found in Murphy's book, p. 844.
 The example code of collapsed Gibbs sampling solving Bayesian Gaussian mixture model can be found in [here](https://github.com/eelxpeng/bayes_gmm). The main logic of the collapsed Gibbs sampling is:
 
-```python
+```Python
 # Loop over iterations
 for i_iter in range(n_iter):
 
@@ -97,7 +97,7 @@ $$
 The class defining the distribution for sampling and probability density evaluation is given:
 
 
-```python
+```Python
 from __future__ import division
 
 import numpy as np
@@ -140,7 +140,7 @@ $$q(w'|w)=\mathcal{N}(w,\mathbf{1}_{10})$$
 The Metropolis-Hasting function is defined:
 
 
-```python
+```Python
 def metropolis(init, iters):
     """
     based on http://www.cs.toronto.edu/~asamir/cifar/rpa-tutorial.pdf
@@ -181,7 +181,7 @@ def metropolis(init, iters):
 Let's start by taking 50,000 samples using Metropolis-Hastings.
 
 
-```python
+```Python
 # define our starting point
 w_0 = np.array([0., 1., 1., 1., 1., 1., 1., 1., 1., 1.])
 
@@ -193,7 +193,7 @@ samples = metropolis(w_0, n)
     Acceptance ratio 0.24342
 
 
-```python
+```Python
 import matplotlib.pyplot as plt
 %matplotlib inline  
 from matplotlib import rcParams
@@ -229,7 +229,7 @@ As it should be noticed that the sampled $v$ is not Gaussian distributed, rather
 So for slice sampling:
 
 
-```python
+```Python
 def slice_sample(init, iters, sigma, step_out=True):
     """
     based on http://homepages.inf.ed.ac.uk/imurray2/teaching/09mlss/
@@ -296,7 +296,7 @@ def slice_sample(init, iters, sigma, step_out=True):
 ```
 
 
-```python
+```Python
 # define our starting point
 w_0 = np.array([0., 1., 1., 1., 1., 1., 1., 1., 1., 1.])
 
@@ -308,7 +308,7 @@ samples = slice_sample(w_0, iters=n, sigma=sigma)
 
 
 
-```python
+```Python
 burnin = 0
 m = n-burnin
 v = samples[0, burnin:]

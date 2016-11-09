@@ -4,7 +4,7 @@ title: Blog
 permalink: /blog/
 ---
 
-Here is the much awaited blog.
+As a journey towards PhD, this blog intends to record my research/project articles/activities. My research is related to Machine Learning, Artificial Intelligence, Social Media, etc.
 
 <ul class="listing">
 {% for post in site.posts %}

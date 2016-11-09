@@ -1,8 +1,6 @@
 title: Xiaopeng LI
 description: > # this means to ignore newlines until "baseurl:"
-  As a journey towards PhD, this blog intends to record my research/project articles
-  /activities. My research is related to Machine Learning, Artificial Intelligence,
-  Social Media, etc.
+  
 sourcecode: "https://github.com/gchauras/much-worse-jekyll-theme"
 
 permalink: blog/:year/:month/:day/:title

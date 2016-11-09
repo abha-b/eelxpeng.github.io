@@ -4,69 +4,39 @@ permalink: /research/
 title: Research
 pubs:
 
-    - title:   "Paper title in 3-7 words that sound like Clingon"
-      author:  "M. McFly, D. Kirk, L. Skywalker, H.J. Potter, I. Jones, H. Houdini"
-      journal: "Transactions on Black Magic"
-      note:    "(presented at Oz)"
+    - title:   "Connection Discovery using Shared Images by Gaussian Relational Topic Model"
+      author:  "X. Li, M. Cheung and J. She"
+      journal: "IEEE International Conference on Big Data"
+      note:    "(Accepted)"
       year:    "2016"
-      url:     "http://publish-more-stuff.org"
-      doi:     "http://dx.doi.org"
-      image:   "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.moviepostershop.com%2Fthe-matrix-movie-poster-1999-1020518087.jpg&f=1"
+      url:     ""
       media:
-        - name: "IMDB"
-          url:  "http://www.imdb.com/title/tt0133093/"
+        - name: "paper"
+          url:  "http://cci.drexel.edu/bigdata/bigdata2016/"
 
-    - title:   "Paper title in 3-7 words that sound like Clingon"
-      author:  "M. McFly, D. Kirk, L. Skywalker, H.J. Potter, I. Jones, H. Houdini"
-      journal: "Transactions on Black Magic"
-      note:    "(presented at Oz)"
+    - title:   "Visual Background Recommendation for Dance Performances Using Dancer-Shared Images"
+      author:  "J. Wen, X. Li, J. She, S. Park and M. Cheung"
+      journal: "IEEE International Conference on Cyber Physical and Social Computing"
+      note:    "(Accepted)"
+      year:    "2016"
+      url:     ""
+      media:
+        - name: "paper"
+          url:  "http://umc.uestc.edu.cn/conference/cybermatics2016/CPSCom2016/accepted-list.php"
+
+    - title:   "Non-user Generated Annotation on User Shared Images for Con- nection Discovery"
+      author:  "M. Cheung, J. She and X. Li"
+      journal: "IEEE International Conference on Cyber Physical and Social Computing"
       year:    "2015"
-      url:     "http://publish-more-stuff.org"
-      doi:     "http://dx.doi.org"
-      image:   "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.moviepostershop.com%2Fthe-matrix-movie-poster-1999-1020518087.jpg&f=1"
+      url:     ""
       media:
-        - name: "IMDB"
-          url:  "http://www.imdb.com/title/tt0133093/"
+        - name: "paper"
+          url:  "http://ieeexplore.ieee.org/document/7396504/?arnumber=7396504&tag=1"
 
-    - title:   "Paper title in 3-7 words that sound like Clingon"
-      author:  "M. McFly, D. Kirk, L. Skywalker, H.J. Potter, I. Jones, H. Houdini"
-      journal: "Transactions on Black Magic"
-      note:    "(presented at Oz)"
-      year:    "2014"
-      url:     "http://publish-more-stuff.org"
-      doi:     "http://dx.doi.org"
-      image:   "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.moviepostershop.com%2Fthe-matrix-movie-poster-1999-1020518087.jpg&f=1"
-      media:
-        - name: "IMDB"
-          url:  "http://www.imdb.com/title/tt0133093/"
-
-    - title:   "Paper title in 3-7 words that sound like Clingon"
-      author:  "M. McFly, D. Kirk, L. Skywalker, H.J. Potter, I. Jones, H. Houdini"
-      journal: "Transactions on Black Magic"
-      note:    "(presented at Oz)"
-      year:    "2013"
-      url:     "http://publish-more-stuff.org"
-      doi:     "http://dx.doi.org"
-      image:   "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.moviepostershop.com%2Fthe-matrix-movie-poster-1999-1020518087.jpg&f=1"
-      media:
-        - name: "IMDB"
-          url:  "http://www.imdb.com/title/tt0133093/"
-
-    - title:   "Paper title in 3-7 words that sound like Clingon"
-      author:  "M. McFly, D. Kirk, L. Skywalker, H.J. Potter, I. Jones, H. Houdini"
-      journal: "Transactions on Black Magic"
-      note:    "(presented at Oz)"
-      year:    "2012"
-      url:     "http://publish-more-stuff.org"
-      doi:     "http://dx.doi.org"
-      image:   "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fimages.moviepostershop.com%2Fthe-matrix-movie-poster-1999-1020518087.jpg&f=1"
-      media:
-        - name: "IMDB"
-          url:  "http://www.imdb.com/title/tt0133093/"
-
+    
 ---
 
-## Publications (peer reviewed)
+## Publications
 
 {% assign thumbnail="left" %}
 
