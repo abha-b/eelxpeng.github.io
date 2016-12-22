@@ -7,17 +7,15 @@ pubs:
     - title:   "Connection Discovery using Shared Images by Gaussian Relational Topic Model"
       author:  "X. Li, M. Cheung and J. She"
       journal: "IEEE International Conference on Big Data"
-      note:    "(Accepted)"
       year:    "2016"
       url:     ""
       media:
         - name: "paper"
-          url:  "http://cci.drexel.edu/bigdata/bigdata2016/"
+          url:  "https://arxiv.org/abs/1612.03639"
 
     - title:   "Visual Background Recommendation for Dance Performances Using Dancer-Shared Images"
       author:  "J. Wen, X. Li, J. She, S. Park and M. Cheung"
       journal: "IEEE International Conference on Cyber Physical and Social Computing"
-      note:    "(Accepted)"
       year:    "2016"
       url:     ""
       media:
