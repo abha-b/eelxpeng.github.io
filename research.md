@@ -5,13 +5,22 @@ title: Research
 pubs:
     
     - title:   "Collaborative Variational Autoencoder for Recommender Systems"
-      author:  "Xiaopeng Li and James She"
+      author:  "X. Li and J. She"
       journal: "Submitted to KDD'17 (Under Review)"
       year:    ""
       url:     ""
       media:
         - name: "code"
           url:  "/assets/cvae-release.zip"
+
+    - title:   "A Bayesian Neural Network for Deep Learning in Mobile Multimedia using Small Data"
+      author:  "X. Li, J. She and M. Cheung"
+      journal: "Submitted to ACM Trans. Multimedia Comput. Commun. Appl. (Under Review)"
+      year:    "2016"
+      url:     ""
+      media:
+        - name: "paper"
+          url:  ""
 
     - title:   "Connection Discovery using Shared Images by Gaussian Relational Topic Model"
       author:  "X. Li, M. Cheung and J. She"
