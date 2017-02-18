@@ -3,6 +3,15 @@ layout: page
 permalink: /research/
 title: Research
 pubs:
+    
+    - title:   "Collaborative Variational Autoencoder for Recommender Systems"
+      author:  "Xiaopeng Li and James She"
+      journal: "Submitted to KDD'17 (Under Review)"
+      year:    ""
+      url:     ""
+      media:
+        - name: "code"
+          url:  "/assets/cvae-release.zip"
 
     - title:   "Connection Discovery using Shared Images by Gaussian Relational Topic Model"
       author:  "X. Li, M. Cheung and J. She"
@@ -22,7 +31,7 @@ pubs:
         - name: "paper"
           url:  "http://umc.uestc.edu.cn/conference/cybermatics2016/CPSCom2016/accepted-list.php"
 
-    - title:   "Non-user Generated Annotation on User Shared Images for Con- nection Discovery"
+    - title:   "Non-user Generated Annotation on User Shared Images for Connection Discovery"
       author:  "M. Cheung, J. She and X. Li"
       journal: "IEEE International Conference on Cyber Physical and Social Computing"
       year:    "2015"
