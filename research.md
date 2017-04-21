@@ -4,6 +4,15 @@ permalink: /research/
 title: Research
 pubs:
     
+    - title:   "Relational Variational Autoencoder for Link Prediction with Multimedia Data"
+      author:  "X. Li and J. She"
+      journal: "Submitted to ACM MM'17 (Under Review)"
+      year:    ""
+      url:     ""
+      media:
+        - name: "paper"
+          url:  ""
+
     - title:   "Collaborative Variational Autoencoder for Recommender Systems"
       author:  "X. Li and J. She"
       journal: "Submitted to KDD'17 (Under Review)"
