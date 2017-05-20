@@ -15,8 +15,8 @@ pubs:
 
     - title:   "Collaborative Variational Autoencoder for Recommender Systems"
       author:  "X. Li and J. She"
-      journal: "Submitted to KDD'17 (Under Review)"
-      year:    ""
+      journal: "ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD'17) (Accepted)"
+      year:    "2017"
       url:     ""
       media:
         - name: "code"
