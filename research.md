@@ -15,7 +15,7 @@ pubs:
 
     - title:   "Collaborative Variational Autoencoder for Recommender Systems"
       author:  "X. Li and J. She"
-      journal: "ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD'17) (Accepted)"
+      journal: "ACM SIGKDD International Conference on Knowledge Discovery and Data Mining"
       year:    "2017"
       url:     ""
       media:
@@ -39,6 +39,15 @@ pubs:
       media:
         - name: "paper"
           url:  "https://arxiv.org/abs/1612.03639"
+
+    - title:   "An Efficient Computation Framework for Connection Discovery using Shared Images"
+      author:  "M. Cheung, X. Li and J. She"
+      journal: "ACM Trans. Multimedia Comput. Commun. Appl."
+      year:    "2017(to appear)"
+      url:     ""
+      media:
+        - name: "paper"
+          url:  ""
 
     - title:   "Visual Background Recommendation for Dance Performances Using Dancer-Shared Images"
       author:  "J. Wen, X. Li, J. She, S. Park and M. Cheung"
