@@ -19,6 +19,8 @@ pubs:
       year:    "2017"
       url:     ""
       media:
+        - name: "paper"
+          url:  "/assets/paper/Collaborative_Variational_Autoencoder.pdf"
         - name: "code"
           url:  "/assets/cvae-release.zip"
 
