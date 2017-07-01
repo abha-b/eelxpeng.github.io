@@ -40,7 +40,7 @@ pubs:
       url:     ""
       media:
         - name: "paper"
-          url:  "https://arxiv.org/abs/1612.03639"
+          url:  "/assets/paper/GRTM.pdf"
 
     - title:   "An Efficient Computation Framework for Connection Discovery using Shared Images"
       author:  "M. Cheung, X. Li and J. She"
@@ -58,7 +58,7 @@ pubs:
       url:     ""
       media:
         - name: "paper"
-          url:  "http://umc.uestc.edu.cn/conference/cybermatics2016/CPSCom2016/accepted-list.php"
+          url:  "/assets/paper/Visual_Background_Recommendation_for_Dance_Performances_Using_Dancer-Shared_Images.pdf"
 
     - title:   "Non-user Generated Annotation on User Shared Images for Connection Discovery"
       author:  "M. Cheung, J. She and X. Li"
