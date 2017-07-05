@@ -6,8 +6,8 @@ pubs:
     
     - title:   "Relational Variational Autoencoder for Link Prediction with Multimedia Data"
       author:  "X. Li and J. She"
-      journal: "Submitted to ACM MM'17 (Under Review)"
-      year:    ""
+      journal: "ACM International Conference on Multimedia (Accepted)"
+      year:    "2017"
       url:     ""
       media:
         - name: "paper"
@@ -41,6 +41,15 @@ pubs:
       media:
         - name: "paper"
           url:  "/assets/paper/GRTM.pdf"
+
+    - title:   "A Distributed Streaming Framework for Connection Discovery Using Shared Videos"
+      author:  "X. Li, M. Cheung and J. She"
+      journal: "ACM Trans. Multimedia Comput. Commun. Appl."
+      year:    "2017(to appear)"
+      url:     ""
+      media:
+        - name: "paper"
+          url:  ""
 
     - title:   "An Efficient Computation Framework for Connection Discovery using Shared Images"
       author:  "M. Cheung, X. Li and J. She"
