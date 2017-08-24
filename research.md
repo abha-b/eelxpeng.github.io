@@ -6,12 +6,14 @@ pubs:
     
     - title:   "Relational Variational Autoencoder for Link Prediction with Multimedia Data"
       author:  "X. Li and J. She"
-      journal: "ACM International Conference on Multimedia (Accepted)"
+      journal: "ACM SIGMM International Conference on Multimedia Thematic Workshop"
       year:    "2017"
       url:     ""
       media:
         - name: "paper"
           url:  ""
+        - name: "github"
+          url:  "https://github.com/eelxpeng/RVAE"
 
     - title:   "Collaborative Variational Autoencoder for Recommender Systems"
       author:  "X. Li and J. She"
@@ -23,6 +25,8 @@ pubs:
           url:  "/assets/paper/Collaborative_Variational_Autoencoder.pdf"
         - name: "code"
           url:  "/assets/cvae-release.zip"
+        - name: "github"
+          url:  "https://github.com/eelxpeng/CollaborativeVAE"
 
     - title:   "A Bayesian Neural Network for Deep Learning in Mobile Multimedia using Small Data"
       author:  "X. Li, J. She and M. Cheung"
@@ -41,6 +45,8 @@ pubs:
       media:
         - name: "paper"
           url:  "/assets/paper/GRTM.pdf"
+        - name: "github"
+          url:  "https://github.com/eelxpeng/GRTM"
 
     - title:   "A Distributed Streaming Framework for Connection Discovery Using Shared Videos"
       author:  "X. Li, M. Cheung and J. She"
