@@ -51,7 +51,7 @@ pubs:
     - title:   "A Distributed Streaming Framework for Connection Discovery Using Shared Videos"
       author:  "X. Li, M. Cheung and J. She"
       journal: "ACM Trans. Multimedia Comput. Commun. Appl."
-      year:    "2017(to appear)"
+      year:    "Sep. 18, 2017"
       url:     ""
       media:
         - name: "paper"
@@ -60,7 +60,16 @@ pubs:
     - title:   "An Efficient Computation Framework for Connection Discovery using Shared Images"
       author:  "M. Cheung, X. Li and J. She"
       journal: "ACM Trans. Multimedia Comput. Commun. Appl."
-      year:    "2017(to appear)"
+      year:    "Aug. 29, 2017"
+      url:     ""
+      media:
+        - name: "paper"
+          url:  ""
+
+    - title:   "Dance Background Image Recommendation with Deep Matrix Factorization"
+      author:  "J. Wen, J. She, X. Li and H. Mao"
+      journal: "ACM Trans. Multimedia Comput. Commun. Appl."
+      year:    "to appear"
       url:     ""
       media:
         - name: "paper"
