@@ -23,8 +23,6 @@ pubs:
       media:
         - name: "paper"
           url:  "/assets/paper/Collaborative_Variational_Autoencoder.pdf"
-        - name: "code"
-          url:  "/assets/cvae-release.zip"
         - name: "github"
           url:  "https://github.com/eelxpeng/CollaborativeVAE"
 
