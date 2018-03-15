@@ -5,9 +5,51 @@
     <description></description>
     <link>http://eelxpeng.github.io/</link>
     <atom:link href="http://eelxpeng.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 17 Dec 2017 20:49:18 +0800</pubDate>
-    <lastBuildDate>Sun, 17 Dec 2017 20:49:18 +0800</lastBuildDate>
+    <pubDate>Thu, 15 Mar 2018 09:09:16 +0800</pubDate>
+    <lastBuildDate>Thu, 15 Mar 2018 09:09:16 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Exponential Family</title>
+        <description>&lt;p&gt;The exponential family distributions are very important in graphical models and Bayesian learning. They have nice properties, like conjugacy and finite sufficient statistics, which enable the convenience and efficiency of the inference and learning process. Yet, I only almost know the details of exponential family distribution. The minor gap between “almost know” and “know” prevents me from understanding it completely. Here I try to close the gap.&lt;/p&gt;
+
+&lt;h2 id=&quot;basics&quot;&gt;Basics&lt;/h2&gt;
+
+&lt;p&gt;The canonical/natural form of exponential family distribution is of the form&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;p(x|\theta) = \frac{1}{Z(\theta)}h(x)\exp[\theta^T \phi(x)] = h(x)\exp[\theta^T \phi(x) - A(\theta)]&lt;/script&gt;
+
+&lt;p&gt;where $\theta$ is the natural parameter, $\phi(x)$ is sufficient statistics, $Z(\theta)$ is the partition function, $A(\theta)$ is the log partition function. Let’s write the univariate Gaussian distribution in  exponential family form&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathcal{N}(x|\mu, \sigma^2) = \frac{1}{\sqrt{2\pi \sigma^2}}\exp[-\frac{1}{2\sigma^2}(x-\mu)^2] = \frac{1}{\sqrt{2\pi \sigma^2}}\exp[-\frac{1}{2\sigma^2}\mu^2]\exp[-\frac{1}{2\sigma^2}x^2 + \frac{\mu}{\sigma^2}x]&lt;/script&gt;
+
+&lt;p&gt;Therefore, it is easy to tell that&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\theta = \begin{pmatrix} \frac{\mu}{\sigma^2} \\ -\frac{1}{2\sigma^2}\end{pmatrix} \\
+\phi(x) = \begin{pmatrix}x \\ x^2\end{pmatrix}\\
+Z(\theta) = \sqrt{2\pi \sigma^2}\exp[-\frac{1}{2\sigma^2}\mu^2]&lt;/script&gt;
+
+&lt;p&gt;There is one beautiful property of the log partition function $\nabla_{\theta}A(\theta) = \mathbb{E}_{p(x)}[\phi(x)]$.&lt;/p&gt;
+
+&lt;h2 id=&quot;mle-estimation&quot;&gt;MLE Estimation&lt;/h2&gt;
+
+&lt;p&gt;Given dataset $\mathcal{D}={x_1, x_2,\cdots,x_N}$, the data likelihood of an exponential family model has the form&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;p(\mathcal{D}|\theta) = [\prod_{i=1}^N h(x_i)] \frac{1}{Z(\theta)^N} \exp[\theta^T (\sum_{i=1}^N \phi(x_i))]&lt;/script&gt;
+
+&lt;p&gt;We see that the sufficient statistics are $N$ and $\sum_{i=1}^N \phi(x_i)$.&lt;/p&gt;
+
+&lt;h2 id=&quot;mle-for-gaussian-distribution&quot;&gt;MLE for Gaussian distribution&lt;/h2&gt;
+
+&lt;h2 id=&quot;em-for-gaussian-mixture&quot;&gt;EM for Gaussian Mixture&lt;/h2&gt;
+
+</description>
+        <pubDate>Wed, 14 Mar 2018 12:00:00 +0800</pubDate>
+        <link>http://eelxpeng.github.io/blog/2018/03/14/Exponential-Family</link>
+        <guid isPermaLink="true">http://eelxpeng.github.io/blog/2018/03/14/Exponential-Family</guid>
+        
+        
+      </item>
     
       <item>
         <title>EM Algorithm In-depth</title>

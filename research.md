@@ -4,6 +4,30 @@ permalink: /research/
 title: Research
 pubs:
     
+    - title:   "Latent Tree Variational Autoencoder for Joint Representation Learning and Multidimensional Clustering"
+      author:  "Xiaopeng Li, Zhourong Chen and Nevin L. Zhang"
+      journal: "arXiv"
+      year:    "2018"
+      media:
+        - name: "arXiv"
+          url:  "https://arxiv.org/abs/1803.05206"
+
+    - title:   "Building Sparse Deep Feedforward Networks using Tree Receptive Fields"
+      author:  "Xiaopeng Li, Zhourong Chen and Nevin L. Zhang"
+      journal: "arXiv"
+      year:    "2018"
+      media:
+        - name: "arXiv"
+          url:  "https://arxiv.org/abs/1803.05209"
+
+    - title:   "Learning Sparse Deep Feedforward Networks via Tree Skeleton Expansion"
+      author:  "Zhourong Chen, Xiaopeng Li and Nevin L. Zhang"
+      journal: "arXiv"
+      year:    "2018"
+      media:
+        - name: "arXiv"
+          url:  ""    
+
     - title:   "Relational Variational Autoencoder for Link Prediction with Multimedia Data"
       author:  "X. Li and J. She"
       journal: "ACM SIGMM International Conference on Multimedia Thematic Workshop"
@@ -67,7 +91,7 @@ pubs:
     - title:   "Dance Background Image Recommendation with Deep Matrix Factorization"
       author:  "J. Wen, J. She, X. Li and H. Mao"
       journal: "ACM Trans. Multimedia Comput. Commun. Appl."
-      year:    "to appear"
+      year:    "2018"
       url:     ""
       media:
         - name: "paper"
