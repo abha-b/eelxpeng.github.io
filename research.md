@@ -26,7 +26,7 @@ pubs:
       year:    "2018"
       media:
         - name: "arXiv"
-          url:  ""    
+          url:  "http://arxiv.org/abs/1803.06120"    
 
     - title:   "Relational Variational Autoencoder for Link Prediction with Multimedia Data"
       author:  "X. Li and J. She"
